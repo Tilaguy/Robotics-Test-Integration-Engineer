@@ -179,7 +179,8 @@ void WheelOdometry::CalculateOdometry()
     /* Wheels linear velocities */
     /********************************************
      * Calculate your Amazing Linear Velocity for each Wheel HERE
-    float FR_vel = ?;
+    ********************************************/
+    float FR_vel = ;
     float RR_vel = ?;
     float RL_vel = ?;
     float FL_vel = ?;
