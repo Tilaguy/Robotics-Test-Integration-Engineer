@@ -96,7 +96,8 @@ if [ ! "$BUILD" == "0" ]; then
           fi
       done
       echo "[INFO]:Packages to build: ${yaml_packages[@]}"
-      colcon build --symlink-install --packages-up-to ${yaml_packages[@]}
+      colcon build --symlink-install --packages-up-to motion_control
+      # colcon build --symlink-install --packages-up-to ${yaml_packages[@]}
     else
       echo "[ERROR]: No Launch field set to any node" 
     fi

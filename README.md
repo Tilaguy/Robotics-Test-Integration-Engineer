@@ -91,6 +91,10 @@ the terms of any separate license agreement you may have executed
 with Licensor regarding such Contributions.
 
 <br />
+
+## Helping links
+- https://stackoverflow.com/questions/14219092/bash-script-and-bin-bashm-bad-interpreter-no-such-file-or-directory
+>> sed -i -e 's/\r$//' scriptname.sh
  
 
 ---
