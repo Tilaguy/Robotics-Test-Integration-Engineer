@@ -166,3 +166,8 @@ ENV ulimit -c 0
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=
 CMD ["/bin/bash"]
+
+# ------------------------------
+# Adding permissions to use audio tools inside container
+ENV DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/run/dbus/system_bus_socket
+RUN  adduser root pulse-access
