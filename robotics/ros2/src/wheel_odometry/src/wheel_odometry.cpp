@@ -82,8 +82,8 @@ rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn WheelO
 
 // Subscribers callbacks
 bool WheelOdometry::RestartOdometryCb(const std::shared_ptr<rmw_request_id_t> request_header,
-                                      const std::shared_ptr<std_srvs::srv::SetBool::Request> request,
-                                      std::shared_ptr<std_srvs::srv::SetBool::Response> response)
+    const std::shared_ptr<std_srvs::srv::SetBool::Request> request,
+    std::shared_ptr<std_srvs::srv::SetBool::Response> response)
 {
     (void)request_header;
     (void)request;
@@ -179,10 +179,13 @@ void WheelOdometry::CalculateOdometry()
     /* Wheels linear velocities */
     /********************************************
      * Calculate your Amazing Linear Velocity for each Wheel HERE
-    float FR_vel = ?;
-    float RR_vel = ?;
-    float RL_vel = ?;
-    float FL_vel = ?;
+    ********************************************/
+
+    float FR_vel = (2.0 * PI * m_wheel_rad * m_motors_rpm.rpms_fr) / 60.0;
+    float RR_vel = (2.0 * PI * m_wheel_rad * m_motors_rpm.rpms_rr) / 60.0;
+    float RL_vel = (2.0 * PI * m_wheel_rad * m_motors_rpm.rpms_rl) / 60.0;
+    float FL_vel = (2.0 * PI * m_wheel_rad * m_motors_rpm.rpms_fl) / 60.0;
+        
     /********************************************
      * END CODE
      *  ********************************************/
@@ -216,15 +219,24 @@ void WheelOdometry::CalculateOdometry()
     /* Wheels linear velocities */
     /********************************************
      * Calculate the X and Y positions
-    float delta_X = ?;
-    float delta_Y = ?;
+     * Taking the model in continuous time to a discrete implementation,
+     * the position variables to be estimated are at instant k,
+     * which depend on the velocity values ​​previously calculated and their past values,
+     * so the system of equations is:
+     * 
+     * X_dot = (x_k - x_k1)/dt
+     * x_k = X_dot*dt + x_k1
+     * 
+     * */
+    float delta_X = X_dot * dt;
+    float delta_Y = Y_dot * dt;
 
     // Don't forget the offset :smile:
-    float X = ?;
-    float Y = ?;
+    float X = m_local_wheel_odom_msg.pose.pose.position.x;
+    float Y = m_local_wheel_odom_msg.pose.pose.position.y;
 
-    m_local_wheel_odom_msg.pose.pose.position.x = ?;
-    m_local_wheel_odom_msg.pose.pose.position.y = ?;
+    m_local_wheel_odom_msg.pose.pose.position.x = delta_X + X;
+    m_local_wheel_odom_msg.pose.pose.position.y = delta_Y + Y;
     /********************************************
      * END CODE
      *  ********************************************/
@@ -269,15 +281,16 @@ void WheelOdometry::CalculateOdometry()
 
     /********************************************
      * Calculate the X and Y positions
-    float delta_X_global = ?;
-    float delta_Y_global = ?;
+     * ********************************************/
+    float delta_X_global = X_dot_global * dt;
+    float delta_Y_global = Y_dot_global * dt;;
 
     // Don't forget the offset :smile:
-    float X_global = ?;
-    float Y_global = ?;
+    float X_global = m_global_wheel_odom_msg.pose.pose.position.x;
+    float Y_global = m_global_wheel_odom_msg.pose.pose.position.y ;
 
-    m_global_wheel_odom_msg.pose.pose.position.x = ?;
-    m_global_wheel_odom_msg.pose.pose.position.y = ?;
+    m_global_wheel_odom_msg.pose.pose.position.x = delta_X_global + X_global;
+    m_global_wheel_odom_msg.pose.pose.position.y = delta_Y_global + Y_global;
     /********************************************
      * END CODE
      *  ********************************************/

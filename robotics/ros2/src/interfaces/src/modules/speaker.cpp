@@ -30,7 +30,11 @@ Speaker::Speaker(rclcpp::NodeOptions &options) : Node("speaker", "interfaces", o
      * Find Documentation here:
      * https://docs.ros.org/en/foxy/Tutorials/Writing-A-Simple-Cpp-Publisher-And-Subscriber.html#write-the-subscriber-node
      ********************************************/
-
+    m_speaker_sub = this->create_subscription<std_msgs::msg::Int8>(
+        "/device/speaker/speaker",
+        default_qos,
+        std::bind(&Speaker::speakerCb, this, _1)
+    );
     /********************************************
      * END CODE
      ********************************************/
@@ -103,7 +107,10 @@ void Speaker::speakerCb(const std_msgs::msg::Int8::SharedPtr msg)
         /********************************************
          * PLAY A DEFAULT SOUND IF NOT FOUND THE TRACK FILE
          ********************************************/
-
+        else {
+            readfd = open((m_path + "track2.wav").c_str(), O_RDONLY);
+            status = pthread_create(&pthread_id, NULL, (THREADFUNCPTR)&Speaker::PlaySound, this);
+        }
         /********************************************
          * END CODE
          ********************************************/
@@ -131,6 +138,7 @@ void *Speaker::PlaySound()
      * Documentation here:
      * https://docs.ros.org/en/foxy/Tutorials/Writing-A-Simple-Cpp-Publisher-And-Subscriber.html#write-the-publisher-node
      ********************************************/
+    //auto message = std::move(readfd < 0)
     std_msgs::msg::Bool::UniquePtr msg(new std_msgs::msg::Bool());
 
     /********************************************

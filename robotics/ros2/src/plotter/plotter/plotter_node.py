@@ -65,6 +65,24 @@ class Plotter(Node):
         # Take care about the variables.
         # NOT define new variables use the variables defined along the code
         #
+        (self.control_ang_ln,) = self.ax[1].plot(
+            [], [], "r", label="Control Angular Signal"
+        )
+        (self.error_angular_ln,) = self.ax[1].plot([], [], "b", label="Angular Error")
+        self.controller_ang_lns = [self.control_ang_ln, self.error_angular_ln]
+        self.ax[1].legend()
+        self.x_ang_data, self.y_ang_data = [[], []], [[], []]
+
+        # RPM
+
+        (self.rpm_right_signal,) = self.ax[2].plot(
+            [], [], "r", label="RPM Right Signal"
+        )
+        (self.rpm_left_signal,) = self.ax[2].plot([], [], "b", label="RPM Left Signal")
+        self.rpm_lns = [self.rpm_right_signal, self.rpm_left_signal]
+        self.ax[2].legend()
+        self.x_pwm, self.y_pwm = [[], []], [[], []]
+
         # Self-contained reference :smile:
         #
         # End Code
@@ -127,7 +145,7 @@ class Plotter(Node):
         self.ax[2].set_ylim(-170, 170)
         self.ax[2].set_title("RPMs")
 
-        return [self.controller_lin_lns, self.controller_ang_lns]
+        return [self.controller_lin_lns, self.controller_ang_lns, self.rpm_lns]
 
     def update_plot(self, frame=None) -> None:
         """!
@@ -142,7 +160,10 @@ class Plotter(Node):
 
         self.controller_ang_lns[0].set_data(self.x_ang_data[0], self.y_ang_data[0])
         self.controller_ang_lns[1].set_data(self.x_ang_data[1], self.y_ang_data[1])
-        return [self.controller_lin_lns, self.controller_ang_lns]
+
+        self.rpm_lns[0].set_data(self.x_pwm[0], self.y_pwm[0])
+        self.rpm_lns[1].set_data(self.x_pwm[1], self.y_pwm[1])
+        return [self.controller_lin_lns, self.controller_ang_lns, self.rpm_lns]
 
     # Callback functions
     def cb_cmd_vel(self, msg: Twist) -> None:
@@ -177,7 +198,14 @@ class Plotter(Node):
         Callback function to get motors RPMS feedback
         @param msg 'MotorsRPM' message containing the velocities of the robot
         """
-        return
+
+        self.y_pwm[0].append(-msg.rpms_fr)
+        x_index = len(self.x_pwm[0])
+        self.x_pwm[0].append(x_index + 1)
+
+        self.y_pwm[1].append(msg.rpms_fl)
+        x_index2 = len(self.x_pwm[1])
+        self.x_pwm[1].append(x_index2 + 1)
 
 
 # =============================================================================
@@ -198,6 +226,7 @@ def main(args=None) -> None:
     # Use the function spin_node
     # https://realpython.com/intro-to-python-threading/
     #
+    plotter_node.spin_node()
     # End Code
     # ---------------------------------------------------------------------
 
@@ -217,4 +246,5 @@ def main(args=None) -> None:
 # =============================================================================
 if __name__ == "__main__":
     main()
+    
 # =============================================================================

@@ -248,34 +248,49 @@ Reference Image
 Respond below in the same solution branch every question. In case your answer isn't in this file, it'll not be valid:
 
 1. [C++] What is the mean of the number "15" used in the `pthread_kill` inside the destructor method?
+>> [R] Pthreads is used for running processes in parallel. The `pthread_kill` instruction takes two parameters that allow signals to be sent through a thread, the second argument is the number of the signal. If this were to be 0, we enter the mode to validate the pthread_t
 
 2. [C++] Why are we using `UniquePointer` instead of `SharedPointers` to publish a ROS2 message?
+>> [R] Given that UniquePointer is an intelligent pointer that allows you to point only to one resource, and once destroyed it returns the value, it is super useful for ROS2 implementations because there is no risk that some other instance is modifying it,
 
 3. [Logic] Why are we using an m_multi_sound variable? Explain ...
+>> [R] This variable can be used to determine the playback state, which allows its use for the exercise of the exercise to publish the boolean every time the audio player changes state.
 
 4. [C++] Why are we freeing the memory allocated by raw pointer "buff" variable and not freeing the memory allocated by the Shared and Unique Pointers? (HARD)
+>> [R] Pointers are not a variable as such, they are a figure that allows addressing the memory space occupied by a variable itself. For this reason, if the release of memory space is required to avoid computation resources being saturated, we must delete the "buff" variables, since in this case the pointers now only point to a free memory space.
 
 5. [C++] Why should we use a "member variable" (persistent over the class) to storage the integral error? `m_vx_int_error`
+>> [R] Because each implementation cycle requires the use of the variable calculated in the previous iteration, that's why I need the variable to be persistent and not to be destroyed at the end of the cycle. This is due to the recursive nature of the implementation of control algorithms in digital systems.
 
 6. [Control] What is the function of the FeedForward controller?
+>> [R] This strategy seeks to provide the closed-loop system with a predictive component, which allows improving the performance of the control system in the event of disturbances in the input signals.
 
 7. [ROS2] What is the purpose of `CascadeLifecycleNode` type nodes?
+>> [R] As I understand it, it acts as an orchestra conductor for the nodes that you want to manage a ROS system, since it allows its initialization, restart and/or replacement of parts of the system during its execution.
 
 8. [Robotics] Why is a global and a local `Odometry` calculated?
+>> [R] The difference lies in the reference frame, while for the local odometry variables, the offsets and adjustments are made only based on the information from the sensors. In the case of global ones, the starting point will be the center of the reference frame during the whole movement of the robot.
 
 9. [Robotics] If the robot has 4 differential wheels, what type of chassis is it?
+>> [R] In this case the robot is considered skid steer, since its center of rotation can be displaced from the center of the vehicle as in the ideal case of differential robots.
 
 10. [Docker] Explain with your own words what is the instructions `apt-get autoremove && apt-get clean -y for?`
+>> [R] This command allows you to clean the operating system of installed libraries and packages that are not really needed or used.
 
 11. [Docker] If you modify a layer what happen with the previous and the next ones?
+>> [R] Nothing, one of the advantages of using Docker is precisely the isolation that exists between containers of other instances and even between containers of the same instance.
 
 12. [Docker] Can we change the basic image (`FROM ubuntu:20.04`) from the docker file to another?
+>> [R] yes, but it is not a guarantee that it can be executed as it is now. This is mainly due to compatibility problems in some built-in libraries.
 
 13. [C++] What is the [libsoft_speed.a](../robotics/ros2/src/motion_control/lib/) file and what is it for?
+>> [R] It is a static library system used in the C++ language.
 
 14. [Python] Why should we use a thread to spin the node?
+>> [R] Python is a widely used but well-known language that tends to be slow, so one way to reduce this effect is to separate the execution of large clicks into separate threads to achieve parallel computation behavior.
 
 15. [Python] Why is the limit on the Y-RPM graph 170?
+>> [R] Generally speaking, according to `rpm_converter`, the maximum limit of the RPM value is `165.0`. Therefore, the limit of `170` is sufficient to appreciate the entire range of variation of the variable.
 
 Next questions are after you finish the project, it doesn't give points, but we really appreciate you feedback:
 * What do you think about this project? Is it hard or enough? Is it to complicated, is it well structure, explanations and instructions are clear?

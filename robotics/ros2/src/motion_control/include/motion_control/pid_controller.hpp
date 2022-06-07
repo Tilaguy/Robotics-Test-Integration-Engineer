@@ -67,6 +67,7 @@ private:
     float m_max_linear_spd = getEnv("SPEED_CONTROLLER_MAX_LIN_VEL", 1.28f);
     float m_max_angular_spd = getEnv("SPEED_CONTROLLER_MAX_ANG_VEL_STATIC", 0.55f);
     // Member attributes
+    double m_prev_prop_w_error = 0.0; // proposed by tila
     double m_prev_prop_error = 0.0;
     double m_wz_int_error = 0.0;
     double m_vx_int_error = 0.0;
