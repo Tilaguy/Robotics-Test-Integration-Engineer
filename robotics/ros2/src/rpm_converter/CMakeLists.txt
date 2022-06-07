@@ -1,21 +1,62 @@
 cmake_minimum_required(VERSION 3.8)
 project(rpm_converter)
 
+# Default to C99
+if(NOT CMAKE_C_STANDARD)
+  set(CMAKE_C_STANDARD 99)
+endif()
+
+# Default to C++14
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 14)
+endif()
+
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rclcpp_cascade_lifecycle REQUIRED)
+find_package(std_srvs REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(usr_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(utils REQUIRED)
+find_package(tf2_ros REQUIRED)
 
-add_executable(rpm_converter_node src/rpm_converter_node.cpp)
-target_include_directories(rpm_converter_node PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
-target_compile_features(rpm_converter_node PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+include_directories(include)
 
-install(TARGETS rpm_converter_node
+set(DEPENDENCIES
+  rclcpp
+  rclcpp_cascade_lifecycle
+  std_srvs
+  std_msgs
+  nav_msgs
+  usr_msgs
+  sensor_msgs
+  geometry_msgs
+  utils
+  tf2_ros
+)
+
+add_executable(rpm_converter
+  src/rpm_convertor_node.cpp
+)
+
+target_link_libraries(rpm_converter 
+  utils::utils 
+)
+ament_target_dependencies(rpm_converter ${DEPENDENCIES})
+
+
+install(TARGETS
+  rpm_converter
   DESTINATION lib/${PROJECT_NAME})
 
+ament_export_include_directories(include)
 
 ament_package()

@@ -4,42 +4,53 @@
         Mail: davidson@kiwibot.com
         Kiwi Campus / AI & Robotics Team
 */
-
 #ifndef RPM_CONVERTER_H_INCLUDED
 #define RPM_CONVERTER_H_INCLUDED
 
-// Custom libraries
-#include "utils/console.hpp"
-
-// Custom Messages
-#include "usr_msgs/msg/motors_rpm.hpp"
+// STD libraries
+#include <math.h>
+#include <memory>
+#include <utility>
+#include <vector>
+#include <algorithm>
+#include <cmath>
+#include <iostream>
 
 // ROS2 Default
+#include "rclcpp/rclcpp.hpp"
+#include "rclcpp_cascade_lifecycle/rclcpp_cascade_lifecycle.hpp"
+
+// ROS2 Transformations
 #include <tf2/LinearMath/Matrix3x3.h>
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2/transform_datatypes.h>
 #include <rclcpp/rclcpp.hpp>
 
+// Transform broadcasting
+#include <tf2_ros/transform_broadcaster.h>
+#include "geometry_msgs/msg/transform_stamped.hpp"
+
+// Custom libraries
+#include "utils/console.hpp"
+
 // ROS2 Messages
-#include "geometry_msgs/msg/twist_stamped.hpp"
+#include "geometry_msgs/msg/quaternion.hpp"
 #include "nav_msgs/msg/odometry.hpp"
+#include "sensor_msgs/msg/imu.hpp"
 #include "std_msgs/msg/bool.hpp"
 #include "std_msgs/msg/float32.hpp"
 #include "std_msgs/msg/string.hpp"
 
-#include <math.h>
-#include <algorithm>
-#include <cmath>
-#include <iostream>
-#include <memory>
-#include <utility>
-#include <vector>
+// ROS2 Services
+#include "std_srvs/srv/set_bool.hpp"
+
+// Custom Messages
+#include "usr_msgs/msg/motors_rpm.hpp"
 
 using std::placeholders::_1;
 
 class RpmConverter : public rclcpp::Node
 {
-
 public:
     /*!
         RpmConverter Class constructor. Inherits from rclcpp::Node
@@ -58,6 +69,7 @@ public:
         @return void.
     */
     void PublishMotorsControl();
+    int m_publish_time = getEnv("CHASSIS_PUBLISH_TIME", 150);
 
 private:
     // Structures
@@ -121,6 +133,5 @@ private:
     double m_wheel_rad = getEnv("ODOMETRY_WHEEL_RADIUS", 0.079f);
     double m_wheel_max_rpm = getEnv("CONVERTER_WHEEL_MAX_RPM", 165.0f);
     double m_wheel_spd_factor = getEnv("CONVERTER_WHEEL_SPD_FACTOR", 17.6f);
-    int m_publish_time = getEnv("CHASSIS_PUBLISH_TIME", 150);
 };
 #endif /* End of RPM_CONVERTER_H_INCLUDED */
